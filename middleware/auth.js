@@ -1,40 +1,44 @@
+const jwt = require("jsonwebtoken");
+// isLooggedIn checkAuth '
+const isLoggedIn = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-const jwt = require("jsonwebtoken")
-// is Loggedin checkAuth
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({ message: "Unauthorized, Invalid token" });
+  }
 
-const isLoggedIn = async (req, res, next) =>{
-    const authHeader =req.headers.authorization
+  const token = authHeader.split(" ")[1];
 
-    if(!authHeader || !authHeader.startsWith("Bearer")){
-        return res.status(401).json({message: "Unautorized, Invalid token"})
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    if (!payload) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to perform action" });
     }
-    const token = authHeader.split(" ")[1]
+    req.user = {
+      email: payload.email,
+      role: payload.role,
+      userId: payload.userId,
+    };
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(401).json({ message: "Authentication Failed" });
+  }
+};
 
-    try {
-        const payLoad = jwt.verify(token, process.env.JWT_SECRET)
-        if(!payLoad){
-            return res.status(401).json({message: "Unauthorized to perform action"})
-        }
-        req.user ={
-            email: payLoad.email,
-            role: payLoad.role,
-            userid: payLoad.userid
-        }
-        next()
-    } catch (error) {
-        console.log(error);
-        return res.status(401).json({message: "Authentication failed"})
+// have the required permissions
+
+const requirePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to access this route" });
     }
-}
+    next();
+  };
+};
 
-// have the required permission
-
-const requirePermission = (...roles)=>{
-    return (req, res, next)=>{
-           if(!roles.includes(req.user.role)){
-            return res.status(403).json({message: "Unauthorized to access this route"})
-           }
-    }
-    next()
-}
-module.exports = {isLoggedIn, requirePermission }
+module.exports = { isLoggedIn, requirePermissions };

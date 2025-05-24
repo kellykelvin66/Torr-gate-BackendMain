@@ -119,7 +119,7 @@ const handleLogin = async (req, res) => {
 
     //generate a token (validity, period)
     const token = jwt.sign(
-      { email: user.email, role: user.role, userid: user._id },
+      { email: user.email, role: user.role, userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "3 days" }
     );
@@ -133,7 +133,7 @@ const handleLogin = async (req, res) => {
         email: user.email,
         profilePicture: user.profilePicture,
         role: user.role,
-        phoneNumber: user.phoneNumber
+        phoneNumber: user.phoneNumber,
       },
     });
   } catch (error) {
@@ -248,12 +248,48 @@ const handleResetPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
- const handleGetUser = async( req,res) =>{
-   res.send("Get user")
- }
-const  handleUpdateUser = async(req,res)=>{
-  res.send("Update User")
- }
+
+const handleGetUser = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    const user = await USER.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const handleUpdateUser = async (req, res) => {
+  const { fullName, phoneNumber } = req.body;
+  const { userId } = req.user;
+  if (!fullName || !phoneNumber) {
+    return res
+      .status(400)
+      .json({ message: "Provide fullName and Phone Number" });
+  }
+
+  try {
+    const user = await USER.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    user.fullName = fullName;
+    user.phoneNumber = phoneNumber;
+    await user.save();
+    res
+      .status(200)
+      .json({ success: true, message: "User Updated Successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   handleRegister,
   handleVerifyEmail,
@@ -261,7 +297,6 @@ module.exports = {
   resendVerificationEmail,
   handleForgotPassword,
   handleResetPassword,
+  handleUpdateUser,
   handleGetUser,
-  handleUpdateUser
-  
 };
