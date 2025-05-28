@@ -49,7 +49,7 @@ const propertySchema = new Schema({
     },
     images: [string], // Array of image URLs
     avaliablity : {
-        type: string,
+        type: String,
         enum: ["available", "rented"],
         default: "available",
     },
