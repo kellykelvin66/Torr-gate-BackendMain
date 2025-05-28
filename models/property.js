@@ -4,48 +4,48 @@ const propertySchema = new Schema({
 
     title:{
         type: String,
-        required: [true, "Property title is required"],
+        required: true,
         trim: true,
     },
     description: {
         type: String,
-        required: [true, "Property description is required"],
+        required: true,
         trim: true,
     },
     location: {
         type: String,
-        required: [true, "Property location is required"],
+        required: true,
         trim: true,
     },
     bedroom: {
         type: Number,
-        required: [true, "Number of bedrooms is required"],
-        min: [1, "At least one bedroom is required"],
+        required: true,
+        min: 0,
     },
     livingRoom: {
         type: Number,
-        required: [true, "Number of living rooms is required"],
-        min: [1, "At least one living room is required"],
+        required: true,
+        min: 0,
     },
     kitchen: {
         type: Number,
-        required: [true, "Number of kitchens is required"],
-        min: [1, "At least one kitchen is required"],
+        required: true, 
+        min: 0,
     },
     toilet: {
         type: Number,
-        required: [true, "Number of toilets is required"],
-        min: [1, "At least one toilet is required"],
+        required: true,
+        min: 0,
     },
     price: {
         type: Number,
-        required: [true, "Property price is required"],
-        min: [0, "Price cannot be negative"],
+        required: true,
+        min: 0,
     },  
     paymentPeriod: {
         type: String,
         enum: ["monthly", "yearly","weekly"],
-        required: [true, "Payment period is required"],
+        required: true,
     },
     images: [String], // Array of image URLs
     avaliablity : {
@@ -56,7 +56,7 @@ const propertySchema = new Schema({
    landlord: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
-        required: [true, "Landlord is required"],
+        required: true,
    }
 }, { timestamps: true });
 
