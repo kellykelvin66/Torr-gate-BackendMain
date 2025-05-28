@@ -47,7 +47,7 @@ const propertySchema = new Schema({
         enum: ["monthly", "yearly","weekly"],
         required: [true, "Payment period is required"],
     },
-    images: [string], // Array of image URLs
+    images: [String], // Array of image URLs
     avaliablity : {
         type: String,
         enum: ["available", "rented"],
