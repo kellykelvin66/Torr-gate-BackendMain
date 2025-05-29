@@ -89,7 +89,7 @@ const getAllproperties = async (req, res) => {
 };
 const getAproperty = async (req, res) => {
   try{
-    const property = await PROPERTY.findById(propertid).populate(
+    const property = await PROPERTY.findById(property._id).populate(
       "landlord",
       "fullName profilePicture email phoneNumber"
   );
