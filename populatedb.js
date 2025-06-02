@@ -5,7 +5,7 @@ const properties = require("./data.json");
 
 const populate = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { dbName: "toriigate" });
+    await mongoose.connect(process.env.MONGO_URI, { dbName: "Toriigate" });
     await PROPERTY.deleteMany();
     await PROPERTY.create(properties);
     console.log("properties added");

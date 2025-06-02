@@ -41,7 +41,7 @@ app.use((req, res) => {
 
 const startServer = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { dbName: "toriigate" });
+    await mongoose.connect(process.env.MONGO_URI, { dbName: "Toriigate" });
     app.listen(PORT, () => {
       console.log(`App Running on port : ${PORT}`);
     });
