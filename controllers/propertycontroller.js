@@ -43,13 +43,13 @@ const updatePropertyAvaliability = async (req, res) => {
   }
   try {
     const property = await PROPERTY.findById(propertyid);
-    property.avaliablity = availability;
+    property.availablity = availability;
     await property.save();
     res.status(200).json({ success: true, message: "Property  updated successfully",
       property,
      });
   } catch (error) {
-    consol.error(error);
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -81,7 +81,7 @@ const getAllproperties = async (req, res) => {
     res
       .status(200)
       .json({ num: totalPages, currentPage: parseInt(page), properties });
-    res.status(200).json({ num: properties.length, properties });
+   
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -89,10 +89,14 @@ const getAllproperties = async (req, res) => {
 };
 const getAproperty = async (req, res) => {
   try{
+   
     const property = await PROPERTY.findById(property._id).populate(
       "landlord",
       "fullName profilePicture email phoneNumber"
   );
+  if (!property) {
+    return res.status(404).json({ message: "Property not found" });
+  }
   // more from landlord
 
   const moreFromLandlord = await PROPERTY.find({
@@ -106,7 +110,7 @@ const getAproperty = async (req, res) => {
      const priceRange = property.price * 0.2;
      const similarProperties = await PROPERTY.find({
       _id: { $ne: property._id },
-      avaliablity: "available",
+      availablity: "available",
       price: {
         $gte: property.price - priceRange,
         $lte: property.price + priceRange,
@@ -117,7 +121,7 @@ const getAproperty = async (req, res) => {
       res.status(200).json({ property})
     
   } catch (error){
-    consol.error(error)
+    console.error(error)
     res.status(500).json({message: error.messag})
   }
 };
