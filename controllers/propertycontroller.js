@@ -80,7 +80,7 @@ const getAllproperties = async (req, res) => {
 
     res
       .status(200)
-      .json({ num: totalPages, currentPage: parseInt(page), properties });
+      .json({ num: totalPages, currentPage: parseInt(page), properties, totalProperties});
    
   } catch (error) {
     console.log(error);
