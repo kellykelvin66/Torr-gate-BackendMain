@@ -5,17 +5,17 @@ const {
   updatePropertyAvaliability,
   getAllproperties,
   getAproperty,
+  deleteProperty
 } = require("../controllers/propertycontroller");
 const {
   isLoggedIn,
-  requirePermission,
   requirePermissions,
 } = require("../middleware/auth");
 
 router.post("/", isLoggedIn, requirePermissions("landlord"), createProperty);
 
 router.get(
-  "/lanlord",
+  "/landlord",
   isLoggedIn,
   requirePermissions("landlord"),
   getLandlordsProperties
@@ -27,6 +27,7 @@ router.patch(
   requirePermissions("landlord"),
   updatePropertyAvaliability
 );
+router.delete("/landlord/:propertyId", isLoggedIn, requirePermissions("landlord"),deleteProperty)
 // tenants
 router.get("/", isLoggedIn, getAllproperties);
 router.get("/:propertyId", isLoggedIn, getAproperty);
